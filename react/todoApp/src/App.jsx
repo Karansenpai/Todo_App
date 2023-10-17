@@ -40,7 +40,8 @@ function App() {
   );
 }
 
-function InitUser() {
+
+export function InitUser() {
   const setUser = useSetRecoilState(userInfo);
   const init = async () => {
       try {
@@ -49,7 +50,6 @@ function InitUser() {
           "Authorization": "Bearer " + localStorage.getItem("token"),
         },
       });
-      console.log(response.data.username);
       if (response.data.username) {
         setUser({
           username: response.data.username,

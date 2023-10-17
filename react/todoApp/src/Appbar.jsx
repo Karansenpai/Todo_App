@@ -5,49 +5,57 @@ import { useNavigate } from "react-router-dom";
 import { userInfo } from "./assets/Atoms/userinfo";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
+// Define CSS styles
+const appBarStyles = {
+  backgroundColor: "#161616",
+  height: 110,
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+};
+
+const titleStyles = {
+  color: "white",
+  margin: 30,
+};
+
+const buttonStyles = {
+  backgroundColor: "#eeeeee",
+  fontWeight: "bold",
+  color: "black",
+  marginRight: 10,
+};
+
 function Appbar() {
   const user = useRecoilValue(userInfo);
   const setUser = useSetRecoilState(userInfo);
   const navigate = useNavigate();
-  if(user.isLoading){
-    return <></>
+
+  if (user.isLoading) {
+    return <></>;
   }
+
   if (user.username) {
     return (
-      <div
-        style={{
-          backgroundColor: "#161616",
-          height: 110,
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
+      <div style={appBarStyles}>
         <div>
-          <Typography variant="h4" style={{ color: "white", margin: 30 }}>
+          <Typography variant="h4" style={titleStyles}>
             MY TODO LIST
           </Typography>
         </div>
 
         <div style={{ display: "flex", margin: 30 }}>
           <div style={{ marginRight: 10 }}>
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: "#eeeeee",
-                fontWeight: "bold",
-                color: "black",
-              }}
+            <Button variant="contained" style={buttonStyles}
+            onClick={()=>{
+              navigate("/todos")
+            }}
             >
               MY TODOS
             </Button>
             <Button
               variant="contained"
-              style={{
-                backgroundColor: "#eeeeee",
-                fontWeight: "bold",
-                color: "black",
-              }}
+              style={buttonStyles}
               onClick={() => {
                 navigate("/signup");
               }}
@@ -63,8 +71,9 @@ function Appbar() {
                   username: null,
                   password: null,
                 });
-                window.location="/";
+                window.location = "/";
               }}
+              style={buttonStyles}
             >
               Logout
             </Button>
@@ -73,18 +82,11 @@ function Appbar() {
       </div>
     );
   }
+
   return (
-    <div
-      style={{
-        backgroundColor: "#161616",
-        height: 110,
-        width: "100%",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
+    <div style={appBarStyles}>
       <div>
-        <Typography variant="h4" style={{ color: "white", margin: 30 }}>
+        <Typography variant="h4" style={titleStyles}>
           MY TODO LIST
         </Typography>
       </div>
@@ -93,11 +95,7 @@ function Appbar() {
         <div style={{ marginRight: 10 }}>
           <Button
             variant="contained"
-            style={{
-              backgroundColor: "#eeeeee",
-              fontWeight: "bold",
-              color: "black",
-            }}
+            style={buttonStyles}
             onClick={() => {
               navigate("/signup");
             }}
@@ -108,12 +106,8 @@ function Appbar() {
         <div>
           <Button
             variant="contained"
-            style={{
-              backgroundColor: "#eeeeee",
-              fontWeight: "bold",
-              color: "black",
-            }}
-            onClick={()=>{
+            style={buttonStyles}
+            onClick={() => {
               navigate("/signin");
             }}
           >

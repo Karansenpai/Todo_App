@@ -16,7 +16,6 @@ const generateToken = (username) => {
   return jwt.sign({username}, SECRET, { expiresIn: "1h" });
 };
 
-
 const authenticateJwt = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
@@ -26,6 +25,7 @@ const authenticateJwt = (req, res, next) => {
         return res.sendStatus(403);
       }
       req.user = user;
+  
       next();
     });
   } else {
@@ -74,6 +74,52 @@ app.post("/signin", (req,res)=>{
     }
   })
 })
+
+app.get("/todos",authenticateJwt, (req,res)=>{
+  fs.readFile("USERS.json","utf-8",(err,data)=>{
+    if(err) throw err;
+    
+    var USERS = JSON.parse(data);
+    var find = USERS.find(u=> u.username == req.user.username);
+    if(!find){
+      res.sendStatus(404);
+    }
+    if(find.todos){
+      res.json({
+        todos: find.todos,
+      });
+    }
+    else{
+      res.json([]);
+    }
+  })
+})
+
+
+app.post("/addTodo",authenticateJwt, (req,res)=>{
+  var Todo = req.body.Todo;
+  fs.readFile("USERS.json","utf-8", (err,data)=>{
+    if(err) throw err;
+
+    var USERS = JSON.parse(data);
+    var find = USERS.find(u => u.username == req.user.username);
+
+    if(find){
+      if(!find.todos){
+        find.todos = [];
+      }
+      find.todos.push(Todo);
+      
+      fs.writeFileSync("USERS.json",JSON.stringify(USERS));
+      res.json({message: "Todo added Successfully"});
+    }
+    else{
+      res.sendStatus(404);
+    }
+  })
+})
+
+
 
 app.get("/me",authenticateJwt, (req,res)=>{
  res.json({username:req.user.username});
