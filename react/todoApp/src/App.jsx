@@ -26,8 +26,8 @@ function App() {
     <RecoilRoot>
       <div>
         <Router>
-          <Appbar />
           <InitUser />
+          <Appbar />
           <Routes>
             <Route path="/" element={<Landing />}></Route>
             <Route path="/todos" element={<Todos />}></Route>
