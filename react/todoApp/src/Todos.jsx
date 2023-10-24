@@ -14,11 +14,14 @@ function Todos() {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-      setTodos(response.data.todos);
+
+      if(response.data.todos){
+        setTodos(response.data.todos);
+      }
     };
     init();
-    console.log("Component mounted");
-  }, []); 
+    
+  },[]); 
 
   const addTodo = async () => {
     if (Todo.length === 0) {
@@ -97,10 +100,11 @@ function Todos() {
               >
                 Delete
               </Button>
-            </div>
+            </div> 
           </div>
         ))}
       </div>
+      
     </div>
   );
 }
