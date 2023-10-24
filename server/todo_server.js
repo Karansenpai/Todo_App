@@ -120,6 +120,22 @@ app.post("/addTodo",authenticateJwt, (req,res)=>{
 })
 
 
+app.delete("/deleteTodo/:id",authenticateJwt,(req,res)=>{
+  fs.readFile("USERS.json","utf-8",(err,data)=>{
+    if(err) throw err;
+    var USERS = JSON.parse(data);
+    var find = USERS.find(u=> u.username == req.user.username);
+    if(find){
+      const index = req.params.id;
+      find.todos.splice(index,1);
+      fs.writeFileSync("USERS.json",JSON.stringify(USERS));
+      res.json({"message":"todo deleted"});
+    }
+    else{
+      res.sendStatus(404);
+    }
+  })
+})
 
 app.get("/me",authenticateJwt, (req,res)=>{
  res.json({username:req.user.username});

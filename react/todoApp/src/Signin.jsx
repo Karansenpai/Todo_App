@@ -75,7 +75,7 @@ function Signin() {
     if (data.token) {
       localStorage.setItem("token", data.token);
       setUser({ username: email, password: password, isLoading: false });
-      navigate("/todos");
+      navigate("/");
     }
     else alert(data.message);
   };

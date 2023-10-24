@@ -16,9 +16,46 @@ function Todos() {
       });
       setTodos(response.data.todos);
     };
-
     init();
-  });
+    console.log("Component mounted");
+  }, []); 
+
+  const addTodo = async () => {
+    if (Todo.length === 0) {
+      alert("Enter what you want to do");
+    } else {
+      const response = await axios.post(
+        `${BASE_URL}/addTodo`,
+        { Todo },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      alert(response.data.message);
+      setTodos([...Todos, Todo]);
+      setTodo(""); 
+    }
+  };
+
+  const deleteTodo = async (index) => {
+    console.log(index);
+    const response = await axios.delete(`${BASE_URL}/deleteTodo/${index}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+
+    if (response.data.message) {
+      const updatedTodos = [...Todos];
+      updatedTodos.splice(index, 1);
+      setTodos(updatedTodos);
+      alert(response.data.message);
+    } else {
+      alert("Failed to delete the todo.");
+    }
+  };
 
   return (
     <div style={mainContainerStyle}>
@@ -33,29 +70,13 @@ function Todos() {
           id="filled-basic"
           label="What do you need to do?"
           variant="filled"
+          value={Todo}
           onChange={(e) => setTodo(e.target.value)}
           style={textFieldStyle}
         />
         <Button
           variant="contained"
-          onClick={async () => {
-            if (Todo.length === 0) {
-              alert("Enter what you want to do");
-            } else {
-              const response = await axios.post(
-                `${BASE_URL}/addTodo`,
-                {
-                  Todo,
-                },
-                {
-                  headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                  },
-                }
-              );
-              alert(response.data.message);
-            }
-          }}
+          onClick={addTodo}
           style={buttonStyle}
         >
           ADD
@@ -69,8 +90,11 @@ function Todos() {
               {todo}
             </Typography>
             <div style={actionContainerStyle}>
-              <input type="checkbox" style={checkboxStyle} />
-              <Button variant="contained" style={deleteButtonStyle}>
+              <Button
+                variant="contained"
+                style={deleteButtonStyle}
+                onClick={() => deleteTodo(index)}
+              >
                 Delete
               </Button>
             </div>
@@ -114,7 +138,7 @@ const buttonStyle = {
 
 const todosContainerStyle = {
   width: "100%",
-  background: "url('your-image-url')", // Add your background image or color
+  background: "url('your-image-url')",
   backgroundSize: "cover",
 };
 
@@ -122,11 +146,11 @@ const todoItemStyle = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  width: "500px", // Broader width
+  width: "500px",
   margin: "10px auto",
-  padding: "20px", // Increased padding
-  backgroundColor: "rgba(255, 255, 255, 0.9)", // A semi-transparent white background
-  borderRadius: "10px", // Increased border radius
+  padding: "20px",
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
+  borderRadius: "10px",
 };
 
 const todoTextStyle = {
@@ -136,10 +160,6 @@ const todoTextStyle = {
 const actionContainerStyle = {
   display: "flex",
   alignItems: "center",
-};
-
-const checkboxStyle = {
-  marginLeft: "10px",
 };
 
 const deleteButtonStyle = {

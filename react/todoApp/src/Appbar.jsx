@@ -57,10 +57,10 @@ function Appbar() {
               variant="contained"
               style={buttonStyles}
               onClick={() => {
-                navigate("/signup");
+                navigate("/");
               }}
             >
-              ADD TODOS
+              HOME
             </Button>
 
             <Button
